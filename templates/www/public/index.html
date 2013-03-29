@@ -1,0 +1,48 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+    <title>jQuery Wookmark Plug-in Example</title>
+    <meta name="description" content="An very basic example of how to use the Wookmark jQuery plug-in.">
+    <meta name="author" content="Christoph Ono">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <!-- CSS Reset -->
+    <link rel="stylesheet" href="/static/css/reset.css">
+    <!-- Styling for your grid blocks -->
+    <link rel="stylesheet" href="/static/css/style.css">
+
+</head>
+<body>
+<div id="container">
+
+    <div id="sliderWraper">
+        <div id="jsCarousel"></div>
+    </div>
+
+    <div id="main" role="main">
+        <div class="toolBar">
+            <div class="uploadBtnWrap"><span id="uploadBtn"></span></div>
+            <input class="searchInput" type="text" value=""/>
+            <div class="switchThumbButtons">
+                <ul class="white">
+                    <li class="first active" tab-key="230"><span>小图模式</span></li>
+                    <li class="last" tab-key="310"><span>大图模式</span></li>
+                </ul>
+            </div>
+        </div>
+        <div id="uploadingWrap" class="uploadingWrap">
+            <div id="uprocessWrap" class="uprocessWrap"></div>
+            <div id="upreview" class="upreview"><ul id="upreviewList"></ul></div>
+        </div>
+        <ul id="tiles" class="tiles"></ul>
+        <div id="loader" class="loader">
+            <div id="loaderCircle" class="loaderCircle"></div>
+        </div>
+    </div>
+</div>
+<script src="static/js/seajs/sea.js" data-config="app/config" data-main="app/main"></script>
+</body>
+</html>
+

@@ -5,6 +5,8 @@
  * Time: 上午10:06
  * To change this template use File | Settings | File Templates.
  */
+
+define(function(require, exports, module){
     /*------------------Function扩展--------------------------*/
     $.extend(Function.prototype, {
         bind: function() {
@@ -32,5 +34,5 @@
             };
         }
     });
-
+});
 

@@ -1,15 +1,22 @@
+define(function(require) {
 
-    $(function(){
-        var waterfall = new Waterfall();
+    var $ = require('jquery');
+    var SWFUpload = require('SWFUpload');
+    var APPCache = require('./cache');
+    var Waterfall = require('./waterfall');
 
-        initSwitchThumbSize(waterfall.loadData());
-        initSearch(waterfall);
+    require('jquery.tabs');
+    require('jquery.slider');
+    require('SWFUpload.hanlder');
 
-        initSlider();
-        initSWFUpload();
+    var waterfall = new Waterfall();
+    initSwitchThumbSize(waterfall.loadData());
+    initSearch(waterfall);
 
-        $(document).bind('scroll', waterfall.onScroll.bind(waterfall));
-    });
+    initSlider();
+    initSWFUpload();
+
+    $(document).bind('scroll', waterfall.onScroll.bind(waterfall));
 
     function initSlider(){
         $.ajax({
@@ -61,4 +68,5 @@
         })
     }
 
+});
 

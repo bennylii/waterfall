@@ -9646,7 +9646,7 @@ $.fn.imagesLoaded = function( callback ){
   });
 
   return this;
-};﻿
+};
 (function($) {
     $.fn.extend({
         jsCarousel: function(options) {

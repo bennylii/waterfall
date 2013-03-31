@@ -1,4 +1,3 @@
-
 function initSWFUpload(){
     new SWFUpload({
         upload_url: "?m=Upload",
@@ -75,7 +74,6 @@ function fileQueueError(file, errorCode, message) {
 function fileDialogComplete(numFilesSelected, numFilesQueued) {
 	try {
 		if (numFilesQueued > 0) {
-
             $(this.customSettings.list_wrap).hide();
             $(this.customSettings.uploading_wrap).show();
 			this.startUpload();
@@ -344,5 +342,6 @@ FileProgress.prototype.toggleCancel = function (show, swfuploadInstance) {
 		};
 	}
 };
+
 
 

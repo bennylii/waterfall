@@ -16,6 +16,8 @@ define(function(require, exports, module){
 
         this.ckey = '';
         this.cache = new APPCache();
+        // 滚动绑定
+        $(window).bind('scroll', this.onScroll.bind(this));
     }
 
     module.exports = Waterfall;
@@ -102,8 +104,8 @@ define(function(require, exports, module){
         for(; i<length; i++) {
             image = data[i];
             topShow = image.top_show == 1 ? '取消': '置顶';
-            html.push('<li>'+
-                '<img src="/uploads/'+image.path+'_'+this.options.size+'" width="'+this.options.size+'" height="'+Math.round(image.height/image.width*this.options.size)+'">'+
+            html.push('<li rel="lbl">'+
+                '<img rel="lbi" src="/uploads/'+image.path+'_'+this.options.size+'" data-src="/uploads/'+image.path+'" width="'+this.options.size+'" height="'+Math.round(image.height/image.width*this.options.size)+'" title="'+image.title+'" >'+
                 '<p>'+image.title+'</p>'+
                 '<a class="topShow" data-init="0" data-id="'+image.id+'" data-top="'+-image.top_show+'">'+topShow+'</a>'+
                 '</li>');

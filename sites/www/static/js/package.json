@@ -1,0 +1,5 @@
+{
+	"name": "",
+	"root": "dist",
+	"output": {"app/main.js":"*"}
+}

@@ -1,21 +1,21 @@
 define(function(require, exports, module){
 
     require('../lib/lib');
+    require('./core');
+    require('./swfupload.handlers');
 
     var APPCache = require('./cache');
     var Waterfall = require('./waterfall');
-
-    require('./swfupload.handlers');
+    var Iviewer = require('./iviewer');
 
 	function init(){
-		var waterfall = new Waterfall();
-		initSwitchThumbSize(waterfall.loadData());
-		initSearch(waterfall);
-
-		initSlider();
-		initSWFUpload();
-
-		$(document).bind('scroll', waterfall.onScroll.bind(waterfall));
+        // 初始化瀑布流组件
+		var waterfall = new Waterfall().loadData();
+		initSwitchThumbSize(waterfall); // 初始化大小图切换组件
+		initSearch(waterfall);  // 初始化搜索
+		initSlider();       // 初始化顶部幻灯片
+		initSWFUpload();    // 初始化上传组件
+        Iviewer.init();     // 初始化图片浏览组件
 	}
 	
 	module.exports = init;
@@ -29,7 +29,7 @@ define(function(require, exports, module){
 
                 for(; i<length; i++) {
                     image = data[i];
-                    html.push('<div><img src="/uploads/'+image.path +'_230" width="230"></div>');
+                    html.push('<div rel="lbl"><img rel="lbi" src="/uploads/'+image.path +'_230" data-src="/uploads/'+image.path +'" width="230"></div>');
                 }
 
                 $('#jsCarousel').append(html.join('')).jsCarousel({autoscroll: true });

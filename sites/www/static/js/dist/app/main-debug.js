@@ -8695,159 +8695,37 @@ SWFUpload.Console.writeLine = function(message) {
  * Created with JetBrains PhpStorm.
  * User: SPRINGWANG
  * Date: 13-3-29
- * Time: 下午2:02
+ * Time: 上午10:06
  * To change this template use File | Settings | File Templates.
  */
-define("dist/app/cache-debug", [], function(require, exports, module) {
-    // 全局缓存处理类
-    function APPCache() {
-        this.caches = [];
-    }
-    module.exports = APPCache;
-    APPCache.prototype.set = function(ckey, value) {
-        //    console.log(ckey,value);
-        if (typeof value != "undefined") this.caches[ckey] = value;
-    };
-    APPCache.prototype.get = function(ckey) {
-        var v = this.caches[ckey];
-        if (typeof v == "undefined") return false;
-        return v;
-    };
-});
-
-/**
- * Created with JetBrains PhpStorm.
- * User: SPRINGWANG
- * Date: 13-3-28
- * Time: 下午11:37
- * To change this template use File | Settings | File Templates.
- */
-define("dist/app/waterfall-debug", [ "./cache-debug" ], function(require, exports, module) {
-    var APPCache = require("./cache-debug");
-    function Waterfall(options) {
-        this.setOptions(options);
-        this.ckey = "";
-        this.cache = new APPCache();
-    }
-    module.exports = Waterfall;
-    Waterfall.prototype.setOptions = function(options) {
-        this.options = {
-            page: 1,
-            isEnd: false,
-            apiURL: "?m=Picture&a=getList",
-            topURL: "?m=Picture&a=setTopShow",
-            size: 230,
-            autoResize: true,
-            container: $("#tiles"),
-            offset: 5,
-            loading: $("#loaderCircle")
-        };
-        this.options = $.extend(this.options, options || {});
-        this.options.itemWidth = this.options.size + 10;
-        this.handler = null;
-        this.page = this.options.page;
-        this.isEnd = this.options.isEnd;
-        this.isLoading = false;
-        return this;
-    };
-    Waterfall.prototype.onScroll = function(event) {
-        if (!this.isLoading) {
-            var closeToBottom = $(window).scrollTop() + $(window).height() > $(document).height() - 100;
-            if (closeToBottom) {
-                this.loadData();
+define("dist/app/core-debug", [], function(require, exports, module) {
+    /*------------------Function扩展--------------------------*/
+    $.extend(Function.prototype, {
+        bind: function() {
+            var method = this, _this = arguments[0], args = [];
+            for (var i = 1, il = arguments.length; i < il; i++) {
+                args.push(arguments[i]);
             }
-        }
-        return this;
-    };
-    Waterfall.prototype.applyLayout = function() {
-        //        console.log(this.options);
-        this.handler = $("li", this.options.container);
-        this.handler.wookmark(this.options);
-        return this;
-    };
-    Waterfall.prototype.loadData = function() {
-        if (this.isEnd) return false;
-        this.isLoading = true;
-        this.options.loading.show();
-        var url = this.options.apiURL + "&p=" + this.page;
-        this.ckey = $.md5(url);
-        var cval = this.cache.get(this.ckey);
-        //    console.log(this.cache);
-        if (cval) {
-            this.onLoadData(cval);
-        } else {
-            $.ajax({
-                url: url,
-                dataType: "json",
-                success: this.onLoadData.bind(this)
-            });
-        }
-        return this;
-    };
-    Waterfall.prototype.onLoadData = function(rsp) {
-        //    console.log(this.ckey) ;
-        this.cache.set(this.ckey, rsp);
-        //        console.log(this.options);
-        var data = rsp.data.list;
-        this.isLoading = false;
-        this.options.loading.hide();
-        if (rsp.data.isEnd) return false;
-        this.isEnd = rsp.data.isEnd;
-        //所有数据加载完了
-        this.page++;
-        var html = [], i = 0, length = data.length, image, topShow;
-        for (;i < length; i++) {
-            image = data[i];
-            topShow = image.top_show == 1 ? "取消" : "置顶";
-            html.push("<li>" + '<img src="/uploads/' + image.path + "_" + this.options.size + '" width="' + this.options.size + '" height="' + Math.round(image.height / image.width * this.options.size) + '">' + "<p>" + image.title + "</p>" + '<a class="topShow" data-init="0" data-id="' + image.id + '" data-top="' + -image.top_show + '">' + topShow + "</a>" + "</li>");
-        }
-        this.options.container.append(html.join(""));
-        this.applyLayout();
-        this.setTopShow($("a.topShow", this.options.container));
-        return this;
-    };
-    Waterfall.prototype.setTopShow = function($els) {
-        //    console.log($els);
-        var inst = this;
-        //$els.attr('data-init',1);
-        $els.unbind("click").click(function() {
-            var el = $(this);
-            $.ajax({
-                url: inst.options.topURL,
-                dataType: "json",
-                data: {
-                    pid: el.attr("data-id"),
-                    top: el.attr("data-top")
-                },
-                success: function(rsp) {
-                    if (rsp.status == 1) {
-                        el.attr("data-top", -rsp.data.top_show);
-                        el.html(rsp.data.top_show == 1 ? "取消" : "置顶");
-                    } else {
-                        alert("置顶错误，请重试，或者联系QQ: 184412679");
-                    }
+            return function() {
+                var thisArgs = args.concat();
+                for (var i = 0, il = arguments.length; i < il; i++) {
+                    thisArgs.push(arguments[i]);
                 }
-            });
-        });
-        return this;
-    };
-    /**
-     * Refreshes the layout.
-     */
-    Waterfall.prototype.reset = function(options) {
-        this.options.container.html("");
-        this.setOptions(options);
-        this.loadData();
-        return this;
-    };
-    Waterfall.prototype.clear = function(options) {
-        this.options.container.html("");
-        this.setOptions({
-            page: 1,
-            isEnd: false
-        });
-        return this;
-    };
+                return method.apply(_this, thisArgs);
+            };
+        },
+        bindEvent: function() {
+            var method = this, _this = arguments[0], args = [];
+            for (var i = 1, il = arguments.length; i < il; i++) {
+                args.push(arguments[i]);
+            }
+            return function(e) {
+                var thisArgs = args.concat();
+                thisArgs.unshift(e || window.event);
+                return method.apply(_this, thisArgs);
+            };
+        }
+    });
 });
 
 function initSWFUpload() {
@@ -9156,18 +9034,382 @@ FileProgress.prototype.toggleCancel = function(show, swfuploadInstance) {
     }
 };
 
-define("dist/app/main-debug", [ "../lib/lib-debug", "./cache-debug", "./waterfall-debug", "./swfupload.handlers-debug" ], function(require, exports, module) {
+/**
+ * Created with JetBrains PhpStorm.
+ * User: SPRINGWANG
+ * Date: 13-3-29
+ * Time: 下午2:02
+ * To change this template use File | Settings | File Templates.
+ */
+define("dist/app/cache-debug", [], function(require, exports, module) {
+    // 全局缓存处理类
+    function APPCache() {
+        this.caches = [];
+    }
+    module.exports = APPCache;
+    APPCache.prototype.set = function(ckey, value) {
+        //    console.log(ckey,value);
+        if (typeof value != "undefined") this.caches[ckey] = value;
+    };
+    APPCache.prototype.get = function(ckey) {
+        var v = this.caches[ckey];
+        if (typeof v == "undefined") return false;
+        return v;
+    };
+});
+
+/**
+ * Created with JetBrains PhpStorm.
+ * User: SPRINGWANG
+ * Date: 13-3-28
+ * Time: 下午11:37
+ * To change this template use File | Settings | File Templates.
+ */
+define("dist/app/waterfall-debug", [ "./cache-debug" ], function(require, exports, module) {
+    var APPCache = require("./cache-debug");
+    function Waterfall(options) {
+        this.setOptions(options);
+        this.ckey = "";
+        this.cache = new APPCache();
+        // 滚动绑定
+        $(window).bind("scroll", this.onScroll.bind(this));
+    }
+    module.exports = Waterfall;
+    Waterfall.prototype.setOptions = function(options) {
+        this.options = {
+            page: 1,
+            isEnd: false,
+            apiURL: "?m=Picture&a=getList",
+            topURL: "?m=Picture&a=setTopShow",
+            size: 230,
+            autoResize: true,
+            container: $("#tiles"),
+            offset: 5,
+            loading: $("#loaderCircle")
+        };
+        this.options = $.extend(this.options, options || {});
+        this.options.itemWidth = this.options.size + 10;
+        this.handler = null;
+        this.page = this.options.page;
+        this.isEnd = this.options.isEnd;
+        this.isLoading = false;
+        return this;
+    };
+    Waterfall.prototype.onScroll = function(event) {
+        if (!this.isLoading) {
+            var closeToBottom = $(window).scrollTop() + $(window).height() > $(document).height() - 100;
+            if (closeToBottom) {
+                this.loadData();
+            }
+        }
+        return this;
+    };
+    Waterfall.prototype.applyLayout = function() {
+        //        console.log(this.options);
+        this.handler = $("li", this.options.container);
+        this.handler.wookmark(this.options);
+        return this;
+    };
+    Waterfall.prototype.loadData = function() {
+        if (this.isEnd) return false;
+        this.isLoading = true;
+        this.options.loading.show();
+        var url = this.options.apiURL + "&p=" + this.page;
+        this.ckey = $.md5(url);
+        var cval = this.cache.get(this.ckey);
+        //    console.log(this.cache);
+        if (cval) {
+            this.onLoadData(cval);
+        } else {
+            $.ajax({
+                url: url,
+                dataType: "json",
+                success: this.onLoadData.bind(this)
+            });
+        }
+        return this;
+    };
+    Waterfall.prototype.onLoadData = function(rsp) {
+        //    console.log(this.ckey) ;
+        this.cache.set(this.ckey, rsp);
+        //        console.log(this.options);
+        var data = rsp.data.list;
+        this.isLoading = false;
+        this.options.loading.hide();
+        if (rsp.data.isEnd) return false;
+        this.isEnd = rsp.data.isEnd;
+        //所有数据加载完了
+        this.page++;
+        var html = [], i = 0, length = data.length, image, topShow;
+        for (;i < length; i++) {
+            image = data[i];
+            topShow = image.top_show == 1 ? "取消" : "置顶";
+            html.push('<li rel="lbl">' + '<img rel="lbi" src="/uploads/' + image.path + "_" + this.options.size + '" data-src="/uploads/' + image.path + '" width="' + this.options.size + '" height="' + Math.round(image.height / image.width * this.options.size) + '" title="' + image.title + '" >' + "<p>" + image.title + "</p>" + '<a class="topShow" data-init="0" data-id="' + image.id + '" data-top="' + -image.top_show + '">' + topShow + "</a>" + "</li>");
+        }
+        this.options.container.append(html.join(""));
+        this.applyLayout();
+        this.setTopShow($("a.topShow", this.options.container));
+        return this;
+    };
+    Waterfall.prototype.setTopShow = function($els) {
+        //    console.log($els);
+        var inst = this;
+        //$els.attr('data-init',1);
+        $els.unbind("click").click(function() {
+            var el = $(this);
+            $.ajax({
+                url: inst.options.topURL,
+                dataType: "json",
+                data: {
+                    pid: el.attr("data-id"),
+                    top: el.attr("data-top")
+                },
+                success: function(rsp) {
+                    if (rsp.status == 1) {
+                        el.attr("data-top", -rsp.data.top_show);
+                        el.html(rsp.data.top_show == 1 ? "取消" : "置顶");
+                    } else {
+                        alert("置顶错误，请重试，或者联系QQ: 184412679");
+                    }
+                }
+            });
+        });
+        return this;
+    };
+    /**
+     * Refreshes the layout.
+     */
+    Waterfall.prototype.reset = function(options) {
+        this.options.container.html("");
+        this.setOptions(options);
+        this.loadData();
+        return this;
+    };
+    Waterfall.prototype.clear = function(options) {
+        this.options.container.html("");
+        this.setOptions({
+            page: 1,
+            isEnd: false
+        });
+        return this;
+    };
+});
+
+/**
+ * Created with JetBrains PhpStorm.
+ * User: SPRINGWANG
+ * Date: 13-3-28
+ * Time: 下午11:37
+ * To change this template use File | Settings | File Templates.
+ */
+define("dist/app/iviewer-debug", [], function(require, exports, module) {
+    function Iviewer(options) {
+        this.setOptions(options).initEvents().build();
+        this.curImage = null;
+    }
+    module.exports = Iviewer;
+    Iviewer.prototype.setOptions = function(options) {
+        this.options = {
+            loadingIcon: "static/images/loading.gif",
+            closeBtnIcon: "static/images/close.png",
+            resizeDuration: 700,
+            fadeDuration: 500
+        };
+        this.options = $.extend(this.options, options || {});
+        return this;
+    };
+    Iviewer.prototype.initEvents = function() {
+        $("body").on("click", "img[rel=lbi]", function(e) {
+            this.start($(e.currentTarget));
+            return false;
+        }.bind(this));
+        $(window).on("resize", this.sizeOverlay);
+        return this;
+    };
+    Iviewer.prototype.build = function() {
+        var str = '<div id="iviewerOverlay"></div>' + '<div id="iviewer">' + '<div class="lb-outerContainer">' + '<div class="lb-container">' + '<img class="lb-image" style="display: inline;"/>' + '<div class="lb-nav" style="display: block;">' + '<a class="lb-prev" style="display: none;"></a>' + '<a class="lb-next" style="display: none;"></a>' + "</div>" + '<div class="lb-loader" style="display: none;">' + '<a class="lb-cancel"><img src="' + this.options.loadingIcon + '"></a>' + "</div> " + "</div>" + "</div>" + '<div class="lb-dataContainer">' + '<div class="lb-data">' + '<div class="lb-details">' + '<span class="lb-caption" style="display: inline;"></span>' + '<span class="lb-number" style=""></span>' + "</div>" + '<div class="lb-closeContainer"> ' + '<a class="lb-close"><img src="' + this.options.closeBtnIcon + '"></a>' + "</div>" + "</div>" + "</div>" + "</div>";
+        var iviewer;
+        $("body").append(str);
+        $("#iviewerOverlay").hide().on("click", function(e) {
+            this.end();
+            return false;
+        }.bind(this));
+        iviewer = $("#iviewer");
+        iviewer.hide().on("click", function(e) {
+            if ($(e.target).attr("id") === "iviewer") this.end();
+            return false;
+        }.bind(this));
+        iviewer.find(".lb-outerContainer").on("click", function(e) {
+            if ($(e.target).attr("id") === "iviewer") this.end();
+            return false;
+        }.bind(this));
+        iviewer.find(".lb-prev").on("click", function(e) {
+            this.prevImage();
+            return false;
+        }.bind(this));
+        iviewer.find(".lb-next").on("click", function(e) {
+            this.nextImage();
+            return false;
+        }.bind(this));
+        iviewer.find(".lb-loader, .lb-close").on("click", function(e) {
+            this.end();
+            return false;
+        }.bind(this));
+        return this;
+    };
+    Iviewer.prototype.start = function(img) {
+        var iviewer, win, left, top;
+        this.switchImage(img);
+        $("#iviewerOverlay").width($(document).width()).height($(document).height()).fadeIn(this.options.fadeDuration);
+        win = $(window);
+        top = win.scrollTop() + win.height() / 10;
+        left = win.scrollLeft();
+        iviewer = $("#iviewer");
+        iviewer.css({
+            top: top + "px",
+            left: left + "px"
+        }).fadeIn(this.options.fadeDuration);
+        return this;
+    };
+    Iviewer.prototype.prevImage = function() {
+        var curLi = this.curImage.parents("[rel=lbl]"), prevLi = curLi.prev("[rel=lbl]");
+        if (prevLi.length = 1) {
+            this.switchImage(prevLi.children("img[rel=lbi]"));
+        }
+    };
+    Iviewer.prototype.nextImage = function() {
+        var curLi = this.curImage.parents("[rel=lbl]"), nextLi = curLi.next("[rel=lbl]");
+        if (nextLi.length = 1) {
+            this.switchImage(nextLi.children("img[rel=lbi]"));
+        }
+    };
+    Iviewer.prototype.switchImage = function(img) {
+        this.curImage = img, src = img.attr("data-src");
+        var iviewer = $("#iviewer"), image = iviewer.find("img.lb-image");
+        this.sizeOverlay();
+        this.disableKeyboardNav();
+        iviewer.find(".loader").fadeIn(this.options.fadeDuration);
+        iviewer.find(".lb-image, .lb-nav, .lb-prev, .lb-next, .lb-dataContainer, .lb-numbers, .lb-caption").hide();
+        iviewer.find(".lb-outerContainer").addClass("animating");
+        preloader = new Image();
+        preloader.onload = function() {
+            image.attr("src", src);
+            image.width = preloader.width;
+            image.height = preloader.height;
+            return this.sizeContainer(preloader.width, preloader.height);
+        }.bind(this);
+        preloader.src = src;
+        this.updateNav();
+    };
+    Iviewer.prototype.updateNav = function() {
+        var curLi = this.curImage.parents("[rel=lbl]");
+        if (curLi.next("[rel=lbl]").length == 0) {
+            $("a.lb-next").hide();
+        } else {
+            $("a.lb-next").show();
+        }
+        if (curLi.prev("[rel=lbl]").length == 0) {
+            $("a.lb-prev").hide();
+        } else {
+            $("a.lb-prev").show();
+        }
+    };
+    Iviewer.prototype.sizeContainer = function(imageWidth, imageHeight) {
+        var container, iviewer, outerContainer, containerBottomPadding, containerLeftPadding, containerRightPadding, containerTopPadding, newHeight, newWidth, oldHeight, oldWidth;
+        iviewer = $("#iviewer");
+        outerContainer = iviewer.find(".lb-outerContainer");
+        oldWidth = outerContainer.outerWidth();
+        oldHeight = outerContainer.outerHeight();
+        container = iviewer.find(".lb-container");
+        containerTopPadding = parseInt(container.css("padding-top"), 10);
+        containerRightPadding = parseInt(container.css("padding-right"), 10);
+        containerBottomPadding = parseInt(container.css("padding-bottom"), 10);
+        containerLeftPadding = parseInt(container.css("padding-left"), 10);
+        newWidth = imageWidth + containerLeftPadding + containerRightPadding;
+        newHeight = imageHeight + containerTopPadding + containerBottomPadding;
+        if (newWidth !== oldWidth && newHeight !== oldHeight) {
+            outerContainer.animate({
+                width: newWidth,
+                height: newHeight
+            }, this.options.resizeDuration, "swing");
+        } else if (newWidth !== oldWidth) {
+            outerContainer.animate({
+                width: newWidth
+            }, this.options.resizeDuration, "swing");
+        } else if (newHeight !== oldHeight) {
+            outerContainer.animate({
+                height: newHeight
+            }, this.options.resizeDuration, "swing");
+        }
+        setTimeout(function() {
+            iviewer.find(".lb-dataContainer").width(newWidth);
+            iviewer.find(".lb-prevLink").height(newHeight);
+            iviewer.find(".lb-nextLink").height(newHeight);
+            this.showImage();
+        }.bind(this), this.options.resizeDuration);
+    };
+    Iviewer.prototype.showImage = function() {
+        var iviewer;
+        iviewer = $("#iviewer");
+        iviewer.find(".lb-loader").hide();
+        iviewer.find(".lb-image").fadeIn("slow");
+        iviewer.find(".lb-nav, .lb-dataContainer, .lb-caption").fadeIn("slow");
+        iviewer.find(".lb-caption").html(this.curImage.attr("alt") || this.curImage.attr("title"));
+        this.updateNav();
+        this.enableKeyboardNav();
+    };
+    Iviewer.prototype.sizeOverlay = function() {
+        $("#iviewerOverlay").width($(document).width()).height($(document).height());
+        return this;
+    };
+    Iviewer.prototype.enableKeyboardNav = function() {
+        $(document).on("keyup.keyboard", $.proxy(this.keyboardAction, this));
+    };
+    Iviewer.prototype.disableKeyboardNav = function() {
+        $(document).off(".keyboard");
+    };
+    Iviewer.prototype.keyboardAction = function(event) {
+        var KEYCODE_ESC = 27, KEYCODE_LEFTARROW = 37, KEYCODE_RIGHTARROW = 39, key, keycode;
+        keycode = event.keyCode;
+        key = String.fromCharCode(keycode).toLowerCase();
+        if (keycode === KEYCODE_ESC || key.match(/x|o|c/)) {
+            this.end();
+        } else if (key === "p" || keycode === KEYCODE_LEFTARROW) {
+            this.prevImage();
+        } else if (key === "n" || keycode === KEYCODE_RIGHTARROW) {
+            this.nextImage();
+        }
+    };
+    Iviewer.prototype.end = function() {
+        this.disableKeyboardNav();
+        $(window).off("resize", this.sizeOverlay);
+        $("#iviewer").fadeOut(this.options.fadeDuration);
+        $("#iviewerOverlay").fadeOut(this.options.fadeDuration);
+    };
+    Iviewer.init = function() {
+        return new Iviewer();
+    };
+});
+
+define("dist/app/main-debug", [ "./core-debug", "./cache-debug", "./waterfall-debug", "./iviewer-debug" ], function(require, exports, module) {
     require("../lib/lib-debug");
+    require("./core-debug");
+    require("./swfupload.handlers-debug");
     var APPCache = require("./cache-debug");
     var Waterfall = require("./waterfall-debug");
-    require("./swfupload.handlers-debug");
+    var Iviewer = require("./iviewer-debug");
     function init() {
-        var waterfall = new Waterfall();
-        initSwitchThumbSize(waterfall.loadData());
+        // 初始化瀑布流组件
+        var waterfall = new Waterfall().loadData();
+        initSwitchThumbSize(waterfall);
+        // 初始化大小图切换组件
         initSearch(waterfall);
+        // 初始化搜索
         initSlider();
+        // 初始化顶部幻灯片
         initSWFUpload();
-        $(document).bind("scroll", waterfall.onScroll.bind(waterfall));
+        // 初始化上传组件
+        Iviewer.init();
     }
     module.exports = init;
     function initSlider() {
@@ -9178,7 +9420,7 @@ define("dist/app/main-debug", [ "../lib/lib-debug", "./cache-debug", "./waterfal
                 var data = rsp.data.list, html = [], i = 0, length = data.length, image;
                 for (;i < length; i++) {
                     image = data[i];
-                    html.push('<div><img src="/uploads/' + image.path + '_230" width="230"></div>');
+                    html.push('<div rel="lbl"><img rel="lbi" src="/uploads/' + image.path + '_230" data-src="/uploads/' + image.path + '" width="230"></div>');
                 }
                 $("#jsCarousel").append(html.join("")).jsCarousel({
                     autoscroll: true

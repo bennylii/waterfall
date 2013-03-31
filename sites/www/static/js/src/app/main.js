@@ -1,16 +1,25 @@
+define(function(require, exports, module){
 
-    $(function(){
-        var waterfall = new Waterfall();
+    require('../lib/lib');
 
-        initSwitchThumbSize(waterfall.loadData());
-        initSearch(waterfall);
+    var APPCache = require('./cache');
+    var Waterfall = require('./waterfall');
 
-        initSlider();
-        initSWFUpload();
+    require('./swfupload.handlers');
 
-        $(document).bind('scroll', waterfall.onScroll.bind(waterfall));
-    });
+	function init(){
+		var waterfall = new Waterfall();
+		initSwitchThumbSize(waterfall.loadData());
+		initSearch(waterfall);
 
+		initSlider();
+		initSWFUpload();
+
+		$(document).bind('scroll', waterfall.onScroll.bind(waterfall));
+	}
+	
+	module.exports = init;
+	
     function initSlider(){
         $.ajax({
             url: '?m=Picture&a=getTopList',
@@ -61,4 +70,5 @@
         })
     }
 
+});
 

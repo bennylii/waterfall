@@ -5,12 +5,20 @@
  * Time: 下午11:37
  * To change this template use File | Settings | File Templates.
  */
+
+
+define(function(require, exports, module){
+
+    var APPCache = require('./cache');
+
     function Waterfall(options){
         this.setOptions(options);
 
         this.ckey = '';
         this.cache = new APPCache();
     }
+
+    module.exports = Waterfall;
 
     Waterfall.prototype.setOptions = function(options){
         this.options = {
@@ -150,3 +158,6 @@
         );
         return this;
     };
+
+
+});

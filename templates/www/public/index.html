@@ -38,8 +38,22 @@
         </div>
     </div>
 </div>
-<script src="/static/js/jq-min.js?v=20130328"></script>
-<script src="/static/js/app-min.js?v=20130328"></script>
+<if condition="$debug">
+    <script src="static/js/seajs/sea.js" data-config="src/app/config"></script>
+    <script type="text/javascript">
+        seajs.use('src/app/main',function(init){
+            init();
+        });
+    </script>
+<else/>
+    <script src="static/js/seajs/sea.js"></script>
+    <script type="text/javascript">
+        seajs.use('dist/app/main',function(init){
+            init();
+        });
+    </script>
+</if>
+
 </body>
 </html>
 

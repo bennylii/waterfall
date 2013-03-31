@@ -25,6 +25,9 @@ class IndexAction extends CommonAction{
      */
     public function index(){
 
+        $debug = intval(get_query('debug',0));
+        $this->assign('debug',($debug == 1 ? true:false));
+
         $this->display(PUBLIC_TMPL_PATH.'public/index.html');
         // 视图判断
 //        if(isset($_GET['tp'])){

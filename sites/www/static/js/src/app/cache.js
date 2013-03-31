@@ -7,10 +7,14 @@
  */
 
 
+define(function(require, exports, module){
+
     // 全局缓存处理类
     function APPCache(){
         this.caches = [];
     }
+
+    module.exports = APPCache;
 
     APPCache.prototype.set = function(ckey,value){
     //    console.log(ckey,value);
@@ -22,3 +26,5 @@
         if(typeof v == 'undefined') return false;
         return v;
     }
+
+});

@@ -127,12 +127,13 @@ body{
 .switchThumbButtons{
     float: right;
     width: 167px;
+    _width: 164px;
     padding-top: 2px;
 }
 
 ul.white{
     background: transparent url(../images/sp-tab.gif) repeat-x scroll 0 -1px;
-    _background-position: 0 -1px;
+    /*_background-position: 0 -1px;*/
     height: 31px;
     overflow: hidden;
     list-style: none;
@@ -148,27 +149,27 @@ ul.white li {
 
 ul.white li.first {
     background: transparent url(../images/sp-tab.gif) no-repeat scroll left -67px;
-    _background-position: left -67px;
+    /*_background-position: left -67px;*/
 }
 
 ul.white li.first.active {
     background: transparent url(../images/sp-tab.gif) no-repeat scroll left -133px;
-    _background-position: left -133px;
+    _background-position: left -133px !important;
 }
 
 ul.white li.last {
     background: transparent url(../images/sp-tab.gif) no-repeat scroll right -34px;
-    _background-position: right -34px;
+    /*_background-position: right -34px;*/
 }
 
 ul.white li.last.active {
     background: transparent url(../images/sp-tab.gif) no-repeat scroll right -167px;
-    _background-position: right -167px;
+    /*_background-position: right -167px !important;*/
 }
 
 ul.white li.active {
     background: transparent url(../images/sp-tab.gif) repeat-x scroll 0 -100px;
-    _background-position: 0 -100px;
+    /*_background-position: 0 -100px;*/
 }
 
 ul.white li span {

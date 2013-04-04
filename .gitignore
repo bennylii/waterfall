@@ -1,4 +1,19 @@
 #################
+## custom
+#################
+
+sites/www/static/build/
+sites/www/static/css/*.mix
+sites/www/uploads/
+www/Runtime/
+
+#################
+## phpstrom
+#################
+
+.idea/
+
+#################
 ## Eclipse
 #################
 
@@ -136,7 +151,6 @@ Desktop.ini
 # Packages
 *.egg
 *.egg-info
-build
 eggs
 parts
 bin
